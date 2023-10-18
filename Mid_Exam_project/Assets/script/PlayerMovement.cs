@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator anim;
 
+
     // Start is called before the first frame update
 
     private void Awake()
@@ -42,6 +43,16 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("isJump", true);
         }
 
+        if (Input.GetKey(KeyCode.S))
+        {
+
+            anim.SetBool("isDuck", true);
+        }
+        else
+        {
+            anim.SetBool("isDuck", false);
+        }
+
         if (movex > 0.01f)
         {
             spriteRenderer.flipX = false;
@@ -69,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isJump = false;
             anim.SetBool("isFall", true);
-
+            
         }
         
     }
