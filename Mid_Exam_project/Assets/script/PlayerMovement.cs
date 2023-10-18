@@ -36,7 +36,7 @@ public class PlayerMovement : MonoBehaviour
         
 
 
-        if (Input.GetButtonDown("Jump") && !isJump)
+        if (Input.GetKey(KeyCode.W) && !isJump)
         {
             rb.velocity = new Vector2(rb.velocity.x,jump);
             anim.SetBool("isJump", true);
@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("isRun", movex != 0);
         }
 
-        if (rb.velocity.y < -1f)
+        if (rb.velocity.y < -0.2f)
         {
             anim.SetBool("isJump", false);
         }
@@ -79,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
         if (target.gameObject.CompareTag("Tiles"))
         {
             isJump = true;
-            
+            anim.SetBool("isFall", false);
         }
         
     }
