@@ -10,12 +10,22 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     public float jump;
     private bool isJump;
-    
+    private SpriteRenderer spriteRenderer;
+    private Animator anim;
+
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+    }
     void Start()
     {
         isJump = false;
         rb = GetComponent<Rigidbody2D>();
+
+        
     }
 
     // Update is called once per frame
@@ -29,7 +39,27 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && !isJump)
         {
             rb.velocity = new Vector2(rb.velocity.x,jump);
+            anim.SetBool("isJump", true);
+        }
 
+        if (movex > 0.01f)
+        {
+            spriteRenderer.flipX = false;
+        }
+        else if(movex < -0.01f)
+        {
+            spriteRenderer.flipX = true;
+
+        }
+
+        if (!isJump)
+        {
+            anim.SetBool("isRun", movex != 0);
+        }
+
+        if (rb.velocity.y < -1f)
+        {
+            anim.SetBool("isJump", false);
         }
     }
 
@@ -38,6 +68,8 @@ public class PlayerMovement : MonoBehaviour
         if(target.gameObject.CompareTag("Tiles"))
         {
             isJump = false;
+            anim.SetBool("isFall", true);
+
         }
         
     }
@@ -47,7 +79,10 @@ public class PlayerMovement : MonoBehaviour
         if (target.gameObject.CompareTag("Tiles"))
         {
             isJump = true;
+            
         }
         
     }
+
+    
 }
