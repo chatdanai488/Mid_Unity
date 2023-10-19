@@ -78,12 +78,14 @@ public class PlayerMovement : MonoBehaviour
     {
         if(target.gameObject.CompareTag("Tiles"))
         {
-            if(target.contacts[0].normal.x == 0)
+            if (target.contacts[0].normal.y == 1)
             {
                 isJump = false;
                 anim.SetBool("isFall", true);
-            }
 
+            }
+            
+            
         }
         
     }
