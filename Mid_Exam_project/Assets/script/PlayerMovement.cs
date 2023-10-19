@@ -13,7 +13,13 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator anim;
 
+    // Plaayer Attribute
 
+    private int Health;
+    private int MaxHealth;
+    private int Defense;
+    private int MaxDefense;
+    private int Attack;
     // Start is called before the first frame update
 
     private void Awake()
@@ -86,6 +92,10 @@ public class PlayerMovement : MonoBehaviour
             }
             
             
+        }
+        if (target.gameObject.CompareTag("Enemy"))
+        {
+            Destroy(gameObject);
         }
         
     }

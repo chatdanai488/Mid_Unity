@@ -29173,6 +29173,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SlimePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 8795857553167879492, guid: 3811116a74f1d7d44bc0241f1ebae501, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

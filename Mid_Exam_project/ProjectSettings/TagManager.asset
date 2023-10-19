@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Tiles
+  - Enemy
   layers:
   - Default
   - TransparentFX
