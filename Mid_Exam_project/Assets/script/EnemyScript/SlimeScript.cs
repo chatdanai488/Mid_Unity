@@ -14,17 +14,18 @@ public class SlimeScript : MonoBehaviour
     private int MaxHealth;
     private int MaxDefense;
     private float Speed;
-
+    
     // Movement
     private float JumpPower;
 
-
+    private SpriteRenderer spriteRenderer;
     private Rigidbody2D SlimeRB;
     private bool IsJump;
     private void InitializeComponent()
     {
         SlimeRB = GetComponent<Rigidbody2D>();
         IsJump = true;
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
     private void InitializeAttribute(int level)
     {
@@ -35,14 +36,26 @@ public class SlimeScript : MonoBehaviour
         Attack = 2 + (float)(0.5 * level);
         Health = MaxHealth;
         Defense = MaxDefense;
-        Speed = 0.5f;
+        Speed = 1f;
 
 
         JumpPower = 5f;
     }
     private void Move()
     {
-        SlimeRB.velocity = new Vector2(SlimeRB.velocity.x, JumpPower);
+        int LeftOrRight = Random.Range(-1, 2);
+        if(LeftOrRight  < 0)
+        {
+            SlimeRB.velocity = new Vector2(Speed, JumpPower);
+            spriteRenderer.flipX = true;
+        }
+        else if(LeftOrRight > 0)
+        {
+            SlimeRB.velocity = new Vector2(Speed*-1, JumpPower);
+            spriteRenderer.flipX = false;
+        }
+
+        
     }
     // Start is called before the first frame update
     void Start()
@@ -62,16 +75,19 @@ public class SlimeScript : MonoBehaviour
                 Move();
             }
         }
+
+        
     }
 
     private void OnCollisionEnter2D(Collision2D target)
     {
         if (target.gameObject.CompareTag("Tiles"))
         {
-            if (target.contacts[0].normal.y == 1)
-            {
-                IsJump = false;
-            }
+            //if (target.contacts[0].normal.y == 1)
+            //{
+                
+            //}
+            IsJump = false;
             Debug.Log(IsJump);
 
         }
