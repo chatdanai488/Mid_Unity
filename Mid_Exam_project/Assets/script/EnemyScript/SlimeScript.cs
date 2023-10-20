@@ -8,10 +8,10 @@ public class SlimeScript : MonoBehaviour
 {
 
     // slime attribute
-    private int Health;
-    private int Defense;
+    private float Health;
+    private float Defense;
     private float Attack;
-    private int AttackSpeed;
+    private float AttackSpeed;
     private int MaxHealth;
     private int MaxDefense;
     private float Speed;
@@ -20,10 +20,11 @@ public class SlimeScript : MonoBehaviour
     private float FieldOfView;
     public LayerMask TargetLayer;
     public LayerMask ObstructLayer;
-    public GameObject PlayerRef;
+    private GameObject PlayerRef;
     public bool cansee { get; private set; }
     private bool Direction;
 
+    private BoxCollider2D boxCollider2d;
 
     // Movement
     private float JumpPower;
@@ -31,12 +32,20 @@ public class SlimeScript : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D SlimeRB;
     private bool IsJump;
+
+    // HealthBar
+    public GameObject HealthBarObject;
+    private HealthBar HealthBarScript;
     private void InitializeComponent()
     {
         SlimeRB = GetComponent<Rigidbody2D>();
         IsJump = true;
         spriteRenderer = GetComponent<SpriteRenderer>();
         PlayerRef = GameObject.Find("Player");
+        boxCollider2d = GetComponent<BoxCollider2D>();
+        IsWaiting = false;
+
+        
     }
     private void InitializeAttribute(int level)
     {
@@ -51,7 +60,7 @@ public class SlimeScript : MonoBehaviour
 
         FieldOfView = 5f;
 
-        JumpPower = 5f;
+        JumpPower = 5.5f;
     }
     private IEnumerator FovCheck()
     {
@@ -63,6 +72,10 @@ public class SlimeScript : MonoBehaviour
         }
     }
 
+
+    private bool IsWaiting;
+
+
     private void FOV()
     {
         Collider2D[] RangeCheck = Physics2D.OverlapCircleAll(transform.position, FieldOfView, TargetLayer);
@@ -71,7 +84,7 @@ public class SlimeScript : MonoBehaviour
             Transform Target = RangeCheck[0].transform;
             Vector2 TargetDirection = (Target.position - transform.position).normalized;
             float TargetDistance = Vector2.Distance(transform.position, Target.position);
-            Debug.Log(TargetDirection);
+            
             if (TargetDirection.x > 0)
             {
                 Direction = true;
@@ -84,7 +97,7 @@ public class SlimeScript : MonoBehaviour
             if (!Physics2D.Raycast(transform.position, TargetDirection, TargetDistance, ObstructLayer))
             {
                 cansee = true;
-                Debug.Log("I Can See");
+                
             }
 
         }
@@ -93,6 +106,7 @@ public class SlimeScript : MonoBehaviour
             cansee = false;
         }
     }
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
@@ -103,9 +117,47 @@ public class SlimeScript : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position, PlayerRef.transform.position);
         }
+        Gizmos.color = Color.red;
+        
     }
-    
+    private void CheckGrounded()
+    {
+        float extraHeightText = 0.1f;
+        Color rayColor = Color.red;
+        Vector2 LeftRayCast = new Vector2(transform.position.x - 1f, transform.position.y);
+        Vector2 RightRayCast = new Vector2(transform.position.x + 1f, transform.position.y);
+        Debug.DrawRay(boxCollider2d.bounds.center + new Vector3(boxCollider2d.bounds.extents.x, 0), Vector2.down * (boxCollider2d.bounds.extents.y + extraHeightText), rayColor);
+        Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(boxCollider2d.bounds.extents.x, 0), Vector2.down * (boxCollider2d.bounds.extents.y + extraHeightText), rayColor);
+        Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(boxCollider2d.bounds.extents.x, boxCollider2d.bounds.extents.y + extraHeightText), Vector2.right * (boxCollider2d.bounds.extents.x * 2f), rayColor);
 
+
+        if (Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, extraHeightText, ObstructLayer))
+        {
+            IsJump = false;
+            
+        }
+        else
+        {
+            IsJump = true;
+        }
+
+    }
+    private void Jump()
+    {
+        if (!IsJump && !IsWaiting)
+        {
+            int Jump = Random.Range(0, 100);
+            if (Jump < 30)
+            {
+                Move();
+            }
+        }
+        else if (!IsJump && cansee)
+        {
+            Move();
+        }
+        StartCoroutine(Waiting());
+    }
     private void Move()
     {
         
@@ -137,27 +189,28 @@ public class SlimeScript : MonoBehaviour
             }
         }
     }
+    private IEnumerator Waiting()
+    {
+        IsWaiting = true;
+        WaitForSeconds wait =  new WaitForSeconds(5f);
+        yield return wait;
+        IsWaiting = false;
+    }
     // Start is called before the first frame update
     void Start()
     {
         InitializeComponent();
         InitializeAttribute(0);
         StartCoroutine(FovCheck());
-
+        
     }
-
+    
     // Update is called once per frame
     void Update()
     {
-        if (!IsJump)
-        {
-            int Jump = Random.Range(0, 100);
-            if(Jump< 30)
-            {
-                Move();
-            }
-        }
-
+        CheckGrounded();
+        Jump(); 
+       
         
     }
 
@@ -165,13 +218,23 @@ public class SlimeScript : MonoBehaviour
     {
         if (target.gameObject.CompareTag("Tiles"))
         {
-            //if (target.contacts[0].normal.y == 1)
-            //{
-                
-            //}
             IsJump = false;
-            Debug.Log(IsJump);
 
+        }
+        if (target.gameObject.CompareTag("Bullet"))
+        {
+            ShootBullet ShootBulletScript = target.gameObject.GetComponent<ShootBullet>();
+            float CurrentAttack = ShootBulletScript.GetAttack();
+            Health -= CurrentAttack;
+            
+            HealthBar HealthBarScript = HealthBarObject.GetComponent<HealthBar>();
+            HealthBarScript.SetBar(Health, MaxHealth);
+
+            if (Health < 0)
+            {
+                Destroy(gameObject);
+            }
+            
         }
 
     }
@@ -180,8 +243,8 @@ public class SlimeScript : MonoBehaviour
     {
         if (target.gameObject.CompareTag("Tiles"))
         {
-            IsJump = true;
-            Debug.Log(IsJump);
+
+
         }
 
     }
