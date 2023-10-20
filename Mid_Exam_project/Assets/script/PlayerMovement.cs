@@ -187,7 +187,11 @@ public class PlayerMovement : MonoBehaviour
         }
         if (target.gameObject.CompareTag("Enemy"))
         {
+<<<<<<< HEAD
             
+=======
+            Destroy(gameObject);
+>>>>>>> b8c5e40ac1d802e03985b8f8928e205395be6e41
         }
         
     }
