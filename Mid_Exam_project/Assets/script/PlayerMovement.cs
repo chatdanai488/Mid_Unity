@@ -148,22 +148,22 @@ public class PlayerMovement : MonoBehaviour
         {
             if (spriteRenderer.flipX)
             {
-                rb.velocity = new Vector2(1*speed, jump);
+                rb.velocity = new Vector2(1f*speed, jump);
             }
             else
             {
-                rb.velocity = new Vector2(-1*speed, jump);
+                rb.velocity = new Vector2(-1f*speed, jump);
             }
         }
         else
         {
             if (SlimeDirection)
             {
-                rb.velocity = new Vector2(-1*speed, jump);
+                rb.velocity = new Vector2(-1f*speed, jump);
             }
             else
             {
-                rb.velocity = new Vector2(1*speed, jump);
+                rb.velocity = new Vector2(1f * speed, jump) ;
             }
         }
     }

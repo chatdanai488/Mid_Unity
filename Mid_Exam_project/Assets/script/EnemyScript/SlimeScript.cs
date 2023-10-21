@@ -53,7 +53,7 @@ public class SlimeScript : MonoBehaviour
 
         MaxHealth = 20 + (10 * level);
         MaxDefense = 3 + (1 * level);
-        Attack = 2 + (float)(0.5 * level);
+        Attack = 6 + (float)(0.5 * level);
         Health = MaxHealth;
         Defense = MaxDefense;
         Speed = 1f;
