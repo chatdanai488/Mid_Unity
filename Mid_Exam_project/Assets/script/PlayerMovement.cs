@@ -17,13 +17,16 @@ public class PlayerMovement : MonoBehaviour
     public GameObject BulletPrefab;
     public LayerMask ObstructLayer;
     private BoxCollider2D boxCollider2d;
+    private bool isHurt;
+
+    public GameObject HealthBarObject;
     // Plaayer Attribute
 
-    private int Health;
+    private float Health;
     private int MaxHealth;
-    private int Defense;
+    private float Defense;
     private int MaxDefense;
-    private int Attack;
+    private float Attack;
     // Start is called before the first frame update
 
     private void Awake()
@@ -139,6 +142,45 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("isShoot", false);
         }
     }
+    private void IsHurt(bool SlimeDirection, float SlimeContact)
+    {
+        if(SlimeContact == 1)
+        {
+            if (spriteRenderer.flipX)
+            {
+                rb.velocity = new Vector2(1*speed, jump);
+            }
+            else
+            {
+                rb.velocity = new Vector2(-1*speed, jump);
+            }
+        }
+        else
+        {
+            if (SlimeDirection)
+            {
+                rb.velocity = new Vector2(-1*speed, jump);
+            }
+            else
+            {
+                rb.velocity = new Vector2(1*speed, jump);
+            }
+        }
+    }
+    private IEnumerator InvincibilityFrame()
+    {
+        float IFrameDuration = 1f;
+        float CurDuration = 0f;
+        isHurt = true;
+        anim.SetBool("isHurt", true);
+        while (CurDuration < IFrameDuration)
+        {
+            yield return null;
+            CurDuration += Time.deltaTime;
+        }
+        anim.SetBool("isHurt", false);
+        isHurt = false;
+    }
     void Start()
     {
         isJump = false;
@@ -187,6 +229,25 @@ public class PlayerMovement : MonoBehaviour
         }
         if (target.gameObject.CompareTag("Enemy"))
         {
+            if (!isHurt)
+            {
+                SlimeScript SlimeScriptScript = target.gameObject.GetComponent<SlimeScript>();
+                float CurrentAttack = SlimeScriptScript.GetAttack();
+                bool SlimeDirection = SlimeScriptScript.GetDirection();
+                float SlimeContact = target.contacts[0].normal.y;
+
+                Health -= CurrentAttack;
+
+                HealthBar HealthBarScript = HealthBarObject.GetComponent<HealthBar>();
+                HealthBarScript.SetBar(Health, MaxHealth);
+
+                if (Health < 0)
+                {
+                    Destroy(gameObject);
+                }
+                IsHurt(SlimeDirection, SlimeContact);
+                StartCoroutine(InvincibilityFrame());
+            }
             
         }
         

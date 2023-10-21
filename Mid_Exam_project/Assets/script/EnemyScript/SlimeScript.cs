@@ -196,6 +196,17 @@ public class SlimeScript : MonoBehaviour
         yield return wait;
         IsWaiting = false;
     }
+    public float GetAttack()
+    {
+        float AttackMultiplier = Random.Range(-5, 6);
+        float CurrentAttack = Attack + Attack * AttackMultiplier / 20;
+
+        return CurrentAttack;
+    }
+    public bool GetDirection()
+    {
+        return spriteRenderer.flipX;
+    }
     // Start is called before the first frame update
     void Start()
     {
