@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D boxCollider2d;
     private bool isHurt;
 
+
+    private bool ShootCooldown;
     public GameObject HealthBarObject;
     // Plaayer Attribute
 
@@ -27,6 +29,8 @@ public class PlayerMovement : MonoBehaviour
     private float Defense;
     private int MaxDefense;
     private float Attack;
+    private float AttackSpeed;
+    private float BulletCount;
     // Start is called before the first frame update
 
     private void Awake()
@@ -42,8 +46,10 @@ public class PlayerMovement : MonoBehaviour
         Defense = 100;
         MaxDefense = 100;
         Attack = 5;
+        AttackSpeed = 1 / 1;
+        BulletCount = 30;
 
-
+        ShootCooldown = false;
     }
     private void CheckGrounded()
     {
@@ -120,11 +126,16 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Shoot()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !ShootCooldown)
         {
-
+            
             ShootBullet(spriteRenderer.flipX);
-
+            BulletCount -= 1;
+            if(BulletCount < 1)
+            {
+                ReloadBullet();
+            }
+            
         }
 
 
@@ -142,44 +153,36 @@ public class PlayerMovement : MonoBehaviour
             anim.SetBool("isShoot", false);
         }
     }
+    private void ReloadBullet()
+    {
+        StartCoroutine(AttackCooldown());
+        BulletCount = 30;
+    }
     private void IsHurt(bool SlimeDirection, float SlimeContact)
     {
-        if(SlimeContact == 1)
+        if (SlimeDirection)
         {
-            if (spriteRenderer.flipX)
-            {
-                rb.velocity = new Vector2(1f*speed, jump);
-            }
-            else
-            {
-                rb.velocity = new Vector2(-1f*speed, jump);
-            }
+            rb.velocity = new Vector2(-1, jump/2);
         }
         else
         {
-            if (SlimeDirection)
-            {
-                rb.velocity = new Vector2(-1f*speed, jump);
-            }
-            else
-            {
-                rb.velocity = new Vector2(1f * speed, jump) ;
-            }
+            rb.velocity = new Vector2(1, jump/2) ;
         }
+        
     }
     private IEnumerator InvincibilityFrame()
     {
-        float IFrameDuration = 1f;
-        float CurDuration = 0f;
         isHurt = true;
         anim.SetBool("isHurt", true);
-        while (CurDuration < IFrameDuration)
-        {
-            yield return null;
-            CurDuration += Time.deltaTime;
-        }
+        yield return new WaitForSeconds(1);
         anim.SetBool("isHurt", false);
         isHurt = false;
+    }
+    private IEnumerator AttackCooldown()
+    {
+        ShootCooldown = true;
+        yield return new WaitForSeconds(AttackSpeed);
+        ShootCooldown = false;
     }
     void Start()
     {
@@ -201,6 +204,11 @@ public class PlayerMovement : MonoBehaviour
         Jump();//Jump
         Duck(); //Duck
 
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            ReloadBullet();
+        }
     }
 
     private void ShootBullet(bool value)
@@ -227,7 +235,7 @@ public class PlayerMovement : MonoBehaviour
             
             
         }
-        if (target.gameObject.CompareTag("Enemy"))
+        if (target.gameObject.CompareTag("Slime"))
         {
             if (!isHurt)
             {
@@ -250,7 +258,51 @@ public class PlayerMovement : MonoBehaviour
             }
             
         }
-        
+        if (target.gameObject.CompareTag("Lizard"))
+        {
+            if (!isHurt)
+            {
+                LizardScript LizardScriptScript = target.gameObject.GetComponent<LizardScript>();
+                float CurrentAttack = LizardScriptScript.GetAttack();
+                bool SlimeDirection = LizardScriptScript.GetDirection();
+                float SlimeContact = target.contacts[0].normal.y;
+
+                Health -= CurrentAttack;
+
+                HealthBar HealthBarScript = HealthBarObject.GetComponent<HealthBar>();
+                HealthBarScript.SetBar(Health, MaxHealth);
+
+                if (Health < 0)
+                {
+                    Destroy(gameObject);
+                }
+                IsHurt(SlimeDirection, SlimeContact);
+                StartCoroutine(InvincibilityFrame());
+            }
+
+        }
+        if (target.gameObject.CompareTag("LizardBullet"))
+        {
+            if (!isHurt)
+            {
+                LizardShootBullet LizardShootBulletScript = target.gameObject.GetComponent<LizardShootBullet>();
+                float CurrentAttack = LizardShootBulletScript.GetAttack();
+                bool SlimeDirection = false;
+                float SlimeContact = target.contacts[0].normal.y;
+
+                Health -= CurrentAttack;
+
+                HealthBar HealthBarScript = HealthBarObject.GetComponent<HealthBar>();
+                HealthBarScript.SetBar(Health, MaxHealth);
+
+                if (Health < 0)
+                {
+                    Destroy(gameObject);
+                }
+                IsHurt(SlimeDirection, SlimeContact);
+                StartCoroutine(InvincibilityFrame());
+            }
+        }
     }
 
     private void OnCollisionExit2D(Collision2D target)

@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
-public class ShootBullet : MonoBehaviour
+public class LizardShootBullet : MonoBehaviour
 {
     private Rigidbody2D rb;
     private bool Direction;
@@ -20,20 +18,20 @@ public class ShootBullet : MonoBehaviour
     }
     public void SetAttribute(float Attack)
     {
-        
+
         BulletAttack = Attack;
     }
     public float GetAttack()
     {
         float AttackMultiplier = Random.Range(-5, 6);
-        float CurrentAttack = BulletAttack + BulletAttack*AttackMultiplier/20;
-        
+        float CurrentAttack = BulletAttack + BulletAttack * AttackMultiplier / 20;
+
         return CurrentAttack;
     }
     // Update is called once per frame
     void Update()
     {
-        if(Direction)
+        if (Direction)
         {
             rb.velocity = new Vector2(-bulletSpeed, rb.velocity.y);
             spriteRenderer.flipX = true;
@@ -41,9 +39,9 @@ public class ShootBullet : MonoBehaviour
         else
         {
             rb.velocity = new Vector2(bulletSpeed, rb.velocity.y);
-           
+
         }
-        
+
     }
     public void GetValue(bool Value)
     {
@@ -57,11 +55,10 @@ public class ShootBullet : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        if (target.gameObject.CompareTag("Slime") || target.gameObject.CompareTag("Lizard"))
+        if (target.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject);
         }
-
     }
 
 }

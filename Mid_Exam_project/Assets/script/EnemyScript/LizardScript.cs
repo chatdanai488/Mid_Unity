@@ -1,12 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.XR;
 
-public class SlimeScript : MonoBehaviour
+public class LizardScript : MonoBehaviour
 {
-
     // slime attribute
     private float Health;
     private float Defense;
@@ -23,6 +20,7 @@ public class SlimeScript : MonoBehaviour
     private GameObject PlayerRef;
     public bool cansee { get; private set; }
     private bool Direction;
+    private bool IsWaiting;
 
     private BoxCollider2D boxCollider2d;
 
@@ -30,35 +28,45 @@ public class SlimeScript : MonoBehaviour
     private float JumpPower;
 
     private SpriteRenderer spriteRenderer;
-    private Rigidbody2D SlimeRB;
+    private Rigidbody2D LizardRB;
     private bool IsJump;
 
     // HealthBar
     public GameObject HealthBarObject;
     private HealthBar HealthBarScript;
+
+    // Attack
+    public GameObject LizardBulletPrefab;
+    public GameObject LizardGunPoint;
+    private bool PreviousValue;
+    private bool IsShoot;
+
+
+    private Animator anim;
     private void InitializeComponent()
     {
-        SlimeRB = GetComponent<Rigidbody2D>();
+        LizardRB = GetComponent<Rigidbody2D>();
         IsJump = true;
         spriteRenderer = GetComponent<SpriteRenderer>();
         PlayerRef = GameObject.Find("Player");
         boxCollider2d = GetComponent<BoxCollider2D>();
         IsWaiting = false;
 
-        
+        PreviousValue = false;
+        IsShoot = false;
     }
     private void InitializeAttribute(int level)
     {
 
 
-        MaxHealth = 20 + (10 * level);
+        MaxHealth = 60 + (10 * level);
         MaxDefense = 3 + (1 * level);
         Attack = 6 + (float)(0.5 * level);
         Health = MaxHealth;
         Defense = MaxDefense;
         Speed = 1f;
 
-        FieldOfView = 5f;
+        FieldOfView = 10f;
 
         JumpPower = 5.5f;
     }
@@ -72,10 +80,6 @@ public class SlimeScript : MonoBehaviour
         }
     }
 
-
-    private bool IsWaiting;
-
-
     private void FOV()
     {
         Collider2D[] RangeCheck = Physics2D.OverlapCircleAll(transform.position, FieldOfView, TargetLayer);
@@ -84,7 +88,7 @@ public class SlimeScript : MonoBehaviour
             Transform Target = RangeCheck[0].transform;
             Vector2 TargetDirection = (Target.position - transform.position).normalized;
             float TargetDistance = Vector2.Distance(transform.position, Target.position);
-            
+            Debug.Log("Checking For Player");
             if (TargetDirection.x > 0)
             {
                 Direction = true;
@@ -93,11 +97,12 @@ public class SlimeScript : MonoBehaviour
             {
                 Direction = false;
             }
-            
+
             if (!Physics2D.Raycast(transform.position, TargetDirection, TargetDistance, ObstructLayer))
             {
                 cansee = true;
-                
+                //FacePlayer(Direction);
+                Debug.Log("Player Spotted");
             }
 
         }
@@ -106,7 +111,7 @@ public class SlimeScript : MonoBehaviour
             cansee = false;
         }
     }
-    
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
@@ -117,8 +122,14 @@ public class SlimeScript : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position, PlayerRef.transform.position);
         }
-        Gizmos.color = Color.red;
+        else
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, PlayerRef.transform.position);
+        }
         
+        Gizmos.color = Color.red;
+
     }
     private void CheckGrounded()
     {
@@ -134,7 +145,7 @@ public class SlimeScript : MonoBehaviour
         if (Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, extraHeightText, ObstructLayer))
         {
             IsJump = false;
-            
+
         }
         else
         {
@@ -144,56 +155,40 @@ public class SlimeScript : MonoBehaviour
     }
     private void Jump()
     {
-        if (!IsJump && !IsWaiting)
+        if (!IsJump && !IsWaiting && !cansee)
         {
             int Jump = Random.Range(0, 100);
-            if (Jump < 30)
+            if (Jump < 100)
             {
                 Move();
             }
+            StartCoroutine(Waiting());
+            Debug.Log("Jump");
         }
-        else if (!IsJump && cansee)
-        {
-            Move();
-        }
-        StartCoroutine(Waiting());
+
     }
     private void Move()
     {
+
         
-        if (!cansee)
-        {
             int LeftOrRight = Random.Range(-1, 2);
             if (LeftOrRight < 0)
             {
-                SlimeRB.velocity = new Vector2(Speed, JumpPower);
+                LizardRB.velocity = new Vector2(Speed, JumpPower);
                 spriteRenderer.flipX = true;
             }
             else if (LeftOrRight > 0)
             {
-                SlimeRB.velocity = new Vector2(Speed * -1, JumpPower);
+                LizardRB.velocity = new Vector2(Speed * -1, JumpPower);
                 spriteRenderer.flipX = false;
             }
-        }
-        else
-        {
-            if (Direction)
-            {
-                SlimeRB.velocity = new Vector2(Speed, JumpPower);
-                spriteRenderer.flipX = true;
-            }
-            else
-            {
-                SlimeRB.velocity = new Vector2(Speed * -1, JumpPower);
-                spriteRenderer.flipX = false;
-            }
-        }
+
+        Debug.Log("Move");
     }
     private IEnumerator Waiting()
     {
         IsWaiting = true;
-        WaitForSeconds wait =  new WaitForSeconds(5f);
-        yield return wait;
+        yield return new WaitForSeconds(3);
         IsWaiting = false;
     }
     public float GetAttack()
@@ -207,6 +202,59 @@ public class SlimeScript : MonoBehaviour
     {
         return spriteRenderer.flipX;
     }
+    private IEnumerator AttackCooldown()
+    {
+        IsShoot = true;
+        yield return new WaitForSeconds(3);
+        IsShoot = false;
+    }
+    private void Shoot()
+    {
+        if (!IsShoot)
+        {
+            anim.SetBool("IsShoot", true);
+            ShootBullet(spriteRenderer.flipX);
+            StartCoroutine(AttackCooldown());
+            anim.SetBool("IsShoot", false);
+        }
+    }
+    private void ShootBullet(bool value)
+    {
+
+        GameObject Bullet = Instantiate(LizardBulletPrefab, LizardGunPoint.transform.position, Quaternion.identity);
+        Bullet.transform.localScale = Vector3.one * 4;
+        LizardShootBullet LizardShootBulletScript = Bullet.GetComponent<LizardShootBullet>();
+        LizardShootBulletScript.GetValue(value);
+        LizardShootBulletScript.SetAttribute(Attack);
+        
+    }
+    private void FlipShootPoint(bool value)
+    {
+        if (value == false)
+        {
+
+            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x - 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
+        }
+        else if (value == true)
+        {
+
+            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x + 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
+        }
+    }
+
+    private void FacePlayer(bool value)
+    {
+        if (value)
+        {
+            spriteRenderer.flipX = true;
+            FlipShootPoint(spriteRenderer.flipX);
+        }
+        else
+        {
+            spriteRenderer.flipY = false;
+            FlipShootPoint(spriteRenderer.flipX);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -214,16 +262,23 @@ public class SlimeScript : MonoBehaviour
         int RandomLevel = Random.Range(0, 5);
         InitializeAttribute(RandomLevel);
         StartCoroutine(FovCheck());
-        
+
     }
-    
+
     // Update is called once per frame
     void Update()
     {
         CheckGrounded();
-        Jump(); 
-       
-        
+        Jump();
+        if (cansee)
+        {
+            Shoot();
+        }
+        if (PreviousValue != spriteRenderer.flipX)
+        {
+            FlipShootPoint(spriteRenderer.flipX);
+            PreviousValue = spriteRenderer.flipX;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D target)
@@ -238,7 +293,7 @@ public class SlimeScript : MonoBehaviour
             ShootBullet ShootBulletScript = target.gameObject.GetComponent<ShootBullet>();
             float CurrentAttack = ShootBulletScript.GetAttack();
             Health -= CurrentAttack;
-            
+
             HealthBar HealthBarScript = HealthBarObject.GetComponent<HealthBar>();
             HealthBarScript.SetBar(Health, MaxHealth);
 
@@ -246,7 +301,7 @@ public class SlimeScript : MonoBehaviour
             {
                 Destroy(gameObject);
             }
-            
+
         }
 
     }

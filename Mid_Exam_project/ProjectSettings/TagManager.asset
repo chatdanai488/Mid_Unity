@@ -7,6 +7,9 @@ TagManager:
   - Tiles
   - Enemy
   - Bullet
+  - Slime
+  - Lizard
+  - LizardBullet
   layers:
   - Default
   - TransparentFX
