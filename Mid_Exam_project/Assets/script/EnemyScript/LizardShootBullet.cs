@@ -12,7 +12,7 @@ public class LizardShootBullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bulletSpeed = 10;
+        bulletSpeed = 3;
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -58,6 +58,11 @@ public class LizardShootBullet : MonoBehaviour
         if (target.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject);
+        }
+        if (target.gameObject.CompareTag("Bullet"))
+        {
+            Destroy(gameObject);
+            Destroy(target.gameObject);
         }
     }
 

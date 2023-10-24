@@ -212,10 +212,10 @@ public class LizardScript : MonoBehaviour
     {
         if (!IsShoot)
         {
-            anim.SetBool("IsShoot", true);
+            
             ShootBullet(spriteRenderer.flipX);
             StartCoroutine(AttackCooldown());
-            anim.SetBool("IsShoot", false);
+            
         }
     }
     private void ShootBullet(bool value)
@@ -230,12 +230,12 @@ public class LizardScript : MonoBehaviour
     }
     private void FlipShootPoint(bool value)
     {
-        if (value == false)
+        if (value == true)
         {
 
             LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x - 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
         }
-        else if (value == true)
+        else if (value == false)
         {
 
             LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x + 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);

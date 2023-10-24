@@ -28425,7 +28425,7 @@ GameObject:
   - component: {fileID: 550066152}
   - component: {fileID: 550066154}
   - component: {fileID: 550066153}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Border
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28606,7 +28606,7 @@ GameObject:
   - component: {fileID: 743078820}
   - component: {fileID: 743078825}
   - component: {fileID: 743078819}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Lizard
   m_TagString: Lizard
   m_Icon: {fileID: 0}
@@ -28630,7 +28630,7 @@ MonoBehaviour:
     m_Bits: 64
   ObstructLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   HealthBarObject: {fileID: 1262441416}
   LizardBulletPrefab: {fileID: 3147786374482246138, guid: 142abfef7bf79a84f88e10f95a0afea0, type: 3}
   LizardGunPoint: {fileID: 1067763427}
@@ -28861,7 +28861,7 @@ GameObject:
   - component: {fileID: 960695798}
   - component: {fileID: 960695797}
   - component: {fileID: 960695796}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28976,7 +28976,7 @@ Transform:
   m_GameObject: {fileID: 1067763427}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.1, y: -0.101, z: 0}
+  m_LocalPosition: {x: -0.106, y: -0.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -29065,7 +29065,7 @@ GameObject:
   - component: {fileID: 1185671663}
   - component: {fileID: 1185671665}
   - component: {fileID: 1185671664}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29140,7 +29140,7 @@ GameObject:
   - component: {fileID: 1262441419}
   - component: {fileID: 1262441418}
   - component: {fileID: 1262441417}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: HealthBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
