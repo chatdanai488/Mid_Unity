@@ -17,6 +17,7 @@ public class LizardScript : MonoBehaviour
     private float FieldOfView;
     public LayerMask TargetLayer;
     public LayerMask ObstructLayer;
+    public LayerMask EnemyLayer;
     private GameObject PlayerRef;
     public bool cansee { get; private set; }
     private bool Direction;
@@ -41,6 +42,8 @@ public class LizardScript : MonoBehaviour
     private bool PreviousValue;
     private bool IsShoot;
 
+
+    public int level;
 
     private Animator anim;
     private void InitializeComponent()
@@ -92,10 +95,12 @@ public class LizardScript : MonoBehaviour
             if (TargetDirection.x > 0)
             {
                 Direction = true;
+                spriteRenderer.flipX = true;
             }
             else
             {
                 Direction = false;
+                spriteRenderer.flipX = false; 
             }
 
             if (!Physics2D.Raycast(transform.position, TargetDirection, TargetDistance, ObstructLayer))
@@ -142,11 +147,12 @@ public class LizardScript : MonoBehaviour
         Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(boxCollider2d.bounds.extents.x, boxCollider2d.bounds.extents.y + extraHeightText), Vector2.right * (boxCollider2d.bounds.extents.x * 2f), rayColor);
 
 
-        if (Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, extraHeightText, ObstructLayer))
+        if (Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, extraHeightText, ObstructLayer)|| Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, extraHeightText, EnemyLayer))
         {
             IsJump = false;
 
         }
+        
         else
         {
             IsJump = true;
@@ -222,7 +228,7 @@ public class LizardScript : MonoBehaviour
     {
 
         GameObject Bullet = Instantiate(LizardBulletPrefab, LizardGunPoint.transform.position, Quaternion.identity);
-        Bullet.transform.localScale = Vector3.one * 4;
+        Bullet.transform.localScale = Vector3.one * 8;
         LizardShootBullet LizardShootBulletScript = Bullet.GetComponent<LizardShootBullet>();
         LizardShootBulletScript.GetValue(value);
         LizardShootBulletScript.SetAttribute(Attack);
@@ -233,12 +239,12 @@ public class LizardScript : MonoBehaviour
         if (value == true)
         {
 
-            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x - 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
+            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x + 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
         }
         else if (value == false)
         {
 
-            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x + 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
+            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x - 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
         }
     }
 

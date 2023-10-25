@@ -11,12 +11,14 @@ public class ShootBullet : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public int bulletSpeed;
     private float BulletAttack;
+    private Animator anim;
     // Start is called before the first frame update
     void Start()
     {
         bulletSpeed = 10;
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        anim = GetComponent<Animator>();
     }
     public void SetAttribute(float Attack)
     {
@@ -50,16 +52,22 @@ public class ShootBullet : MonoBehaviour
         Direction = Value;
     }
 
-
+    private IEnumerator Hit()
+    {
+        anim.SetBool("IsHit", true);
+        rb.velocity = new Vector2(0, 0);
+        yield return new WaitForSeconds(0.2f);
+        Destroy(gameObject);
+    }
     private void OnCollisionEnter2D(Collision2D target)
     {
         if (target.gameObject.CompareTag("Tiles"))
         {
-            Destroy(gameObject);
+            StartCoroutine(Hit());
         }
         if (target.gameObject.CompareTag("Slime") || target.gameObject.CompareTag("Lizard"))
         {
-            Destroy(gameObject);
+            StartCoroutine(Hit());
         }
 
     }

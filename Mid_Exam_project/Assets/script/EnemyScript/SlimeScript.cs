@@ -20,6 +20,7 @@ public class SlimeScript : MonoBehaviour
     private float FieldOfView;
     public LayerMask TargetLayer;
     public LayerMask ObstructLayer;
+    public LayerMask EnemyLayer;
     private GameObject PlayerRef;
     public bool cansee { get; private set; }
     private bool Direction;
@@ -136,6 +137,7 @@ public class SlimeScript : MonoBehaviour
             IsJump = false;
             
         }
+       
         else
         {
             IsJump = true;
@@ -228,10 +230,9 @@ public class SlimeScript : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D target)
     {
-        if (target.gameObject.CompareTag("Tiles"))
+        if (target.gameObject.CompareTag("Lizard"))
         {
             IsJump = false;
-
         }
         if (target.gameObject.CompareTag("Bullet"))
         {

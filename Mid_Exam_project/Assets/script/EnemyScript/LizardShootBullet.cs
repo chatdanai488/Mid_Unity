@@ -31,7 +31,7 @@ public class LizardShootBullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Direction)
+        if (!Direction)
         {
             rb.velocity = new Vector2(-bulletSpeed, rb.velocity.y);
             spriteRenderer.flipX = true;
@@ -63,6 +63,10 @@ public class LizardShootBullet : MonoBehaviour
         {
             Destroy(gameObject);
             Destroy(target.gameObject);
+        }
+        if (target.gameObject.CompareTag("Slime"))
+        {
+            Destroy(gameObject);
         }
     }
 
