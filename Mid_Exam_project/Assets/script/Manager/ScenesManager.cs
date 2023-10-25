@@ -16,10 +16,23 @@ public class ScenesManager : MonoBehaviour
 
     public enum Scene
     {
+        MainMenu,
+        LevelSelect,
         Level1,
         Level2
     }
-
+    public void LoadNewGame()
+    {
+        SceneManager.LoadScene(Scene.Level1.ToString());
+    }
+    public void LoadLevelSelection()
+    {
+        SceneManager.LoadScene(Scene.LevelSelect.ToString());
+    }
+    public void LevelSelect(int level)
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + level);
+    }
     public void LoadScene(Scene scene)
     {
         SceneManager.LoadScene(scene.ToString());
