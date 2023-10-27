@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5885636012462178890}
   - component: {fileID: 4212331524478071823}
   - component: {fileID: 2230505634107757768}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LizardBullet
   m_TagString: LizardBullet
   m_Icon: {fileID: 0}
@@ -183,3 +183,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2110f19ddbec2244c830978982fdc8ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletSpeed: 0

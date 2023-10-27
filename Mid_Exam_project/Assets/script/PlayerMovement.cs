@@ -310,6 +310,10 @@ public class PlayerMovement : MonoBehaviour
                 StartCoroutine(InvincibilityFrame());
             }
         }
+        if (target.gameObject.CompareTag("Coin"))
+        {
+
+        }
     }
 
     private void OnCollisionExit2D(Collision2D target)
@@ -326,12 +330,12 @@ public class PlayerMovement : MonoBehaviour
         if (value == true)
         {
             
-            GunPoint.transform.position = new Vector3(GunPoint.transform.position.x - 2f, GunPoint.transform.position.y,GunPoint.transform.position.z);
+            GunPoint.transform.position = new Vector3(GunPoint.transform.position.x - 1f, GunPoint.transform.position.y,GunPoint.transform.position.z);
         }
         else if (value == false)
         {
             
-            GunPoint.transform.position = new Vector3(GunPoint.transform.position.x + 2f, GunPoint.transform.position.y, GunPoint.transform.position.z);
+            GunPoint.transform.position = new Vector3(GunPoint.transform.position.x + 1f, GunPoint.transform.position.y, GunPoint.transform.position.z);
         }
     }
 

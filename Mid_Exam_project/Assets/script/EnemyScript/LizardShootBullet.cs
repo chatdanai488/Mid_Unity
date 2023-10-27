@@ -46,6 +46,7 @@ public class LizardShootBullet : MonoBehaviour
     public void GetValue(bool Value)
     {
         Direction = Value;
+        Debug.Log(Direction);
     }
 
 

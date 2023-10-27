@@ -13,6 +13,8 @@ public class LizardBossScript : MonoBehaviour
     private int MaxDefense;
     private float Speed;
 
+    private int RandomLevel;
+
     // Raycast
     private float FieldOfView;
     public LayerMask TargetLayer;
@@ -43,6 +45,7 @@ public class LizardBossScript : MonoBehaviour
     private bool IsShoot;
 
 
+    public GameObject CoinPrefab;
     public int level;
 
     private Animator anim;
@@ -265,7 +268,7 @@ public class LizardBossScript : MonoBehaviour
     void Start()
     {
         InitializeComponent();
-        int RandomLevel = Random.Range(0, 5);
+        RandomLevel = Random.Range(0, 5);
         InitializeAttribute(RandomLevel);
         StartCoroutine(FovCheck());
 
@@ -306,6 +309,12 @@ public class LizardBossScript : MonoBehaviour
             if (Health < 0)
             {
                 Destroy(gameObject);
+                int CoinCount = Random.Range(100, 200) * RandomLevel;
+                for(int i = 0; i<CoinCount; i++)
+                {
+                    GameObject Coin = Instantiate(CoinPrefab, transform);
+                }
+
             }
 
         }

@@ -13,6 +13,7 @@ public class LizardScript : MonoBehaviour
     private int MaxHealth;
     private int MaxDefense;
     private float Speed;
+    private int RandomLevel;
 
     // Raycast
     private float FieldOfView;
@@ -50,6 +51,8 @@ public class LizardScript : MonoBehaviour
     public int level;
 
     private Animator anim;
+
+    public GameObject CoinPrefab;
     private void InitializeComponent()
     {
         LizardRB = GetComponent<Rigidbody2D>();
@@ -166,7 +169,7 @@ public class LizardScript : MonoBehaviour
         Debug.DrawRay(boxCollider2d.bounds.center - new Vector3(boxCollider2d.bounds.extents.x, boxCollider2d.bounds.extents.y + extraHeightText), Vector2.right * (boxCollider2d.bounds.extents.x * 2f), rayColor);
 
 
-        if (Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, extraHeightText, ObstructLayer)|| Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, extraHeightText, EnemyLayer))
+        if (Physics2D.BoxCast(boxCollider2d.bounds.center, boxCollider2d.bounds.size, 0f, Vector2.down, extraHeightText, ObstructLayer))
         {
             IsJump = false;
 
@@ -258,12 +261,12 @@ public class LizardScript : MonoBehaviour
         if (value == true)
         {
 
-            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x + 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
+            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x + 1.8f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
         }
         else if (value == false)
         {
 
-            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x - 1f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
+            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x - 1.8f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
         }
     }
 
@@ -284,7 +287,7 @@ public class LizardScript : MonoBehaviour
     void Start()
     {
         InitializeComponent();
-        int RandomLevel = Random.Range(0, 5);
+        RandomLevel = Random.Range(0, 5);
         InitializeAttribute(RandomLevel);
         StartCoroutine(FovCheck());
 
@@ -328,6 +331,12 @@ public class LizardScript : MonoBehaviour
 
             if (Health < 0)
             {
+                
+                int CoinCount = Random.Range(1, 5) * RandomLevel;
+                for (int i = 0; i < CoinCount; i++)
+                {
+                    GameObject Coin = Instantiate(CoinPrefab, transform.position, Quaternion.identity);
+                }
                 Destroy(gameObject);
             }
 

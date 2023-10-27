@@ -10,6 +10,7 @@ TagManager:
   - Slime
   - Lizard
   - LizardBullet
+  - Coin
   layers:
   - Default
   - TransparentFX
@@ -20,9 +21,9 @@ TagManager:
   - player
   - Map
   - Enemy
-  - 
-  - 
-  - 
+  - Coin
+  - Bullet
+  - EnemyBullet
   - 
   - 
   - 
