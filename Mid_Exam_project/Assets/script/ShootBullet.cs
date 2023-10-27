@@ -12,6 +12,7 @@ public class ShootBullet : MonoBehaviour
     public int bulletSpeed;
     private float BulletAttack;
     private Animator anim;
+    private CircleCollider2D circleCollider;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +20,8 @@ public class ShootBullet : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
+        circleCollider = GetComponent<CircleCollider2D>();
+        BulletShoot();
     }
     public void SetAttribute(float Attack)
     {
@@ -32,10 +35,9 @@ public class ShootBullet : MonoBehaviour
         
         return CurrentAttack;
     }
-    // Update is called once per frame
-    void Update()
+    private void BulletShoot()
     {
-        if(Direction)
+        if (Direction)
         {
             rb.velocity = new Vector2(-bulletSpeed, rb.velocity.y);
             spriteRenderer.flipX = true;
@@ -43,8 +45,13 @@ public class ShootBullet : MonoBehaviour
         else
         {
             rb.velocity = new Vector2(bulletSpeed, rb.velocity.y);
-           
+
         }
+    }
+    // Update is called once per frame
+    void Update()
+    {
+        
         
     }
     public void GetValue(bool Value)
@@ -56,6 +63,9 @@ public class ShootBullet : MonoBehaviour
     {
         anim.SetBool("IsHit", true);
         rb.velocity = new Vector2(0, 0);
+        
+        circleCollider.isTrigger = true;
+        
         yield return new WaitForSeconds(0.2f);
         Destroy(gameObject);
     }

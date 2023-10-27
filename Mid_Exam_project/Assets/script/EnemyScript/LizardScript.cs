@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LizardScript : MonoBehaviour
@@ -25,12 +26,15 @@ public class LizardScript : MonoBehaviour
 
     private BoxCollider2D boxCollider2d;
 
+    private float PlayerDetect;
+
     // Movement
     private float JumpPower;
 
     private SpriteRenderer spriteRenderer;
     private Rigidbody2D LizardRB;
     private bool IsJump;
+    private bool CanMove;
 
     // HealthBar
     public GameObject HealthBarObject;
@@ -57,6 +61,9 @@ public class LizardScript : MonoBehaviour
 
         PreviousValue = false;
         IsShoot = false;
+
+        CanMove = false;
+
     }
     private void InitializeAttribute(int level)
     {
@@ -64,7 +71,7 @@ public class LizardScript : MonoBehaviour
 
         MaxHealth = 60 + (10 * level);
         MaxDefense = 3 + (1 * level);
-        Attack = 6 + (float)(0.5 * level);
+        Attack = 15 + (float)(0.5 * level);
         Health = MaxHealth;
         Defense = MaxDefense;
         Speed = 1f;
@@ -72,6 +79,8 @@ public class LizardScript : MonoBehaviour
         FieldOfView = 10f;
 
         JumpPower = 5.5f;
+
+        PlayerDetect = 15f;
     }
     private IEnumerator FovCheck()
     {
@@ -80,9 +89,20 @@ public class LizardScript : MonoBehaviour
         {
             yield return wait;
             FOV();
+            if (!CanMove)
+            {
+                FOVMove();
+            }
         }
     }
-
+    private void FOVMove()
+    {
+        Collider2D[] RangeCheck = Physics2D.OverlapCircleAll(transform.position, PlayerDetect, TargetLayer);
+        if (RangeCheck.Length > 0)
+        {
+            CanMove = true;
+        }
+    }
     private void FOV()
     {
         Collider2D[] RangeCheck = Physics2D.OverlapCircleAll(transform.position, FieldOfView, TargetLayer);
@@ -108,6 +128,7 @@ public class LizardScript : MonoBehaviour
                 cansee = true;
                 //FacePlayer(Direction);
                 Debug.Log("Player Spotted");
+                
             }
 
         }
@@ -116,22 +137,20 @@ public class LizardScript : MonoBehaviour
             cansee = false;
         }
     }
-
+    
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
         UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, FieldOfView);
+        Gizmos.color = Color.blue;
+        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, PlayerDetect);
 
         if (cansee)
         {
             Gizmos.color = Color.green;
             Gizmos.DrawLine(transform.position, PlayerRef.transform.position);
         }
-        else
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawLine(transform.position, PlayerRef.transform.position);
-        }
+        
         
         Gizmos.color = Color.red;
 
@@ -275,7 +294,11 @@ public class LizardScript : MonoBehaviour
     void Update()
     {
         CheckGrounded();
-        Jump();
+        if (CanMove)
+        {
+            Jump();
+        }
+        
         if (cansee)
         {
             Shoot();

@@ -22,6 +22,7 @@ public class SlimeScript : MonoBehaviour
     public LayerMask ObstructLayer;
     public LayerMask EnemyLayer;
     private GameObject PlayerRef;
+    private float PlayerDetect;
     public bool cansee { get; private set; }
     private bool Direction;
 
@@ -34,6 +35,8 @@ public class SlimeScript : MonoBehaviour
     private Rigidbody2D SlimeRB;
     private bool IsJump;
 
+    private bool CanMove;
+
     // HealthBar
     public GameObject HealthBarObject;
     private HealthBar HealthBarScript;
@@ -45,16 +48,16 @@ public class SlimeScript : MonoBehaviour
         PlayerRef = GameObject.Find("Player");
         boxCollider2d = GetComponent<BoxCollider2D>();
         IsWaiting = false;
-
+        CanMove = false;
         
     }
     private void InitializeAttribute(int level)
     {
 
 
-        MaxHealth = 20 + (10 * level);
+        MaxHealth = 5 + (10 * level);
         MaxDefense = 3 + (1 * level);
-        Attack = 6 + (float)(0.5 * level);
+        Attack = 10 + (float)(0.5 * level);
         Health = MaxHealth;
         Defense = MaxDefense;
         Speed = 1f;
@@ -62,6 +65,8 @@ public class SlimeScript : MonoBehaviour
         FieldOfView = 5f;
 
         JumpPower = 5.5f;
+
+        PlayerDetect = 15f;
     }
     private IEnumerator FovCheck()
     {
@@ -70,13 +75,25 @@ public class SlimeScript : MonoBehaviour
         {
             yield return wait;
             FOV();
+            if (!CanMove)
+            {
+                FOVMove();
+            }
+            
         }
     }
 
 
     private bool IsWaiting;
 
-
+    private void FOVMove()
+    {
+        Collider2D[] RangeCheck = Physics2D.OverlapCircleAll(transform.position, PlayerDetect, TargetLayer);
+        if (RangeCheck.Length > 0)
+        {
+            CanMove = true;
+        }
+    }
     private void FOV()
     {
         Collider2D[] RangeCheck = Physics2D.OverlapCircleAll(transform.position, FieldOfView, TargetLayer);
@@ -98,7 +115,6 @@ public class SlimeScript : MonoBehaviour
             if (!Physics2D.Raycast(transform.position, TargetDirection, TargetDistance, ObstructLayer))
             {
                 cansee = true;
-                
             }
 
         }
@@ -112,6 +128,8 @@ public class SlimeScript : MonoBehaviour
     {
         Gizmos.color = Color.white;
         UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, FieldOfView);
+        Gizmos.color = Color.blue;
+        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, PlayerDetect);
 
         if (cansee)
         {
@@ -121,6 +139,7 @@ public class SlimeScript : MonoBehaviour
         Gizmos.color = Color.red;
         
     }
+    
     private void CheckGrounded()
     {
         float extraHeightText = 0.1f;
@@ -223,7 +242,11 @@ public class SlimeScript : MonoBehaviour
     void Update()
     {
         CheckGrounded();
-        Jump(); 
+        if(CanMove)
+        {
+            Jump();
+        }
+         
        
         
     }

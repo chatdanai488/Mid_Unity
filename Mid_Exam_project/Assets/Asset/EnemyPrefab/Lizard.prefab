@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 57991355885201530}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.106, y: -0.06, z: 0}
+  m_LocalPosition: {x: -0.332, y: -0.089, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -388,9 +388,13 @@ MonoBehaviour:
   ObstructLayer:
     serializedVersion: 2
     m_Bits: 128
+  EnemyLayer:
+    serializedVersion: 2
+    m_Bits: 0
   HealthBarObject: {fileID: 8278929659002738064}
   LizardBulletPrefab: {fileID: 3147786374482246138, guid: 142abfef7bf79a84f88e10f95a0afea0, type: 3}
   LizardGunPoint: {fileID: 57991355885201530}
+  level: 0
 --- !u!1 &4048602535396104550
 GameObject:
   m_ObjectHideFlags: 0

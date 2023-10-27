@@ -45,7 +45,7 @@ public class PlayerMovement : MonoBehaviour
         Health = 100;
         Defense = 100;
         MaxDefense = 100;
-        Attack = 5;
+        Attack = 7;
         AttackSpeed = 1 / 1;
         BulletCount = 30;
 
@@ -97,10 +97,17 @@ public class PlayerMovement : MonoBehaviour
         {
 
             anim.SetBool("isDuck", true);
+            boxCollider2d.size = new Vector2 (boxCollider2d.size.x, 0.2f);
+            boxCollider2d.offset = new Vector2(boxCollider2d.offset.x, -0.098f);
         }
         else
         {
             anim.SetBool("isDuck", false);
+            boxCollider2d.size = new Vector2(boxCollider2d.size.x, 0.301937f);
+            boxCollider2d.offset = new Vector2(boxCollider2d.offset.x, -0.03929493f);
+
+
+
         }
     }
     private void Run()
@@ -319,12 +326,12 @@ public class PlayerMovement : MonoBehaviour
         if (value == true)
         {
             
-            GunPoint.transform.position = new Vector3(GunPoint.transform.position.x - 1f, GunPoint.transform.position.y,GunPoint.transform.position.z);
+            GunPoint.transform.position = new Vector3(GunPoint.transform.position.x - 2f, GunPoint.transform.position.y,GunPoint.transform.position.z);
         }
         else if (value == false)
         {
             
-            GunPoint.transform.position = new Vector3(GunPoint.transform.position.x + 1f, GunPoint.transform.position.y, GunPoint.transform.position.z);
+            GunPoint.transform.position = new Vector3(GunPoint.transform.position.x + 2f, GunPoint.transform.position.y, GunPoint.transform.position.z);
         }
     }
 
