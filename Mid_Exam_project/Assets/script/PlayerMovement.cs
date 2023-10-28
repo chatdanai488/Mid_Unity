@@ -191,6 +191,15 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(AttackSpeed);
         ShootCooldown = false;
     }
+    private IEnumerator Dead()
+    {
+        anim.SetBool("isDead", true);
+        anim.SetBool("isHurt", false);
+        rb.constraints = RigidbodyConstraints2D.FreezeAll;
+        yield return new WaitForSeconds(2);
+        
+        Destroy(gameObject);
+    }
     void Start()
     {
         isJump = false;
@@ -256,12 +265,15 @@ public class PlayerMovement : MonoBehaviour
                 HealthBar HealthBarScript = HealthBarObject.GetComponent<HealthBar>();
                 HealthBarScript.SetBar(Health, MaxHealth);
 
-                if (Health < 0)
-                {
-                    Destroy(gameObject);
-                }
+                
                 IsHurt(SlimeDirection, SlimeContact);
                 StartCoroutine(InvincibilityFrame());
+                if (Health < 0)
+                {
+                    StartCoroutine(Dead());
+
+
+                }
             }
             
         }
@@ -279,12 +291,15 @@ public class PlayerMovement : MonoBehaviour
                 HealthBar HealthBarScript = HealthBarObject.GetComponent<HealthBar>();
                 HealthBarScript.SetBar(Health, MaxHealth);
 
-                if (Health < 0)
-                {
-                    Destroy(gameObject);
-                }
+                
                 IsHurt(SlimeDirection, SlimeContact);
                 StartCoroutine(InvincibilityFrame());
+                if (Health < 0)
+                {
+                    StartCoroutine(Dead());
+
+
+                }
             }
 
         }
@@ -302,12 +317,15 @@ public class PlayerMovement : MonoBehaviour
                 HealthBar HealthBarScript = HealthBarObject.GetComponent<HealthBar>();
                 HealthBarScript.SetBar(Health, MaxHealth);
 
-                if (Health < 0)
-                {
-                    Destroy(gameObject);
-                }
+                
                 IsHurt(SlimeDirection, SlimeContact);
                 StartCoroutine(InvincibilityFrame());
+                if (Health < 0)
+                {
+                    StartCoroutine(Dead());
+
+
+                }
             }
         }
         if (target.gameObject.CompareTag("Coin"))
