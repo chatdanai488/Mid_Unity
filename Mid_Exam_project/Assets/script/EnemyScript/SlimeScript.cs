@@ -40,6 +40,8 @@ public class SlimeScript : MonoBehaviour
     // HealthBar
     public GameObject HealthBarObject;
     private HealthBar HealthBarScript;
+
+    public GameObject CoinPrefab;
     private void InitializeComponent()
     {
         SlimeRB = GetComponent<Rigidbody2D>();
@@ -268,6 +270,16 @@ public class SlimeScript : MonoBehaviour
 
             if (Health < 0)
             {
+                Destroy(gameObject);
+                int CoinCount = Random.Range(1, 3);
+                for (int i = 0; i < CoinCount; i++)
+                {
+                    int CoinValue = Random.Range(1, 3);
+                    GameObject Coin = Instantiate(CoinPrefab, transform.position, Quaternion.identity);
+                    CoinScript CoinScriptScript = Coin.GetComponent<CoinScript>();
+                    
+                    CoinScriptScript.GetCoinValue(CoinValue);
+                }
                 Destroy(gameObject);
             }
             

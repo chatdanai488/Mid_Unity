@@ -332,10 +332,13 @@ public class LizardScript : MonoBehaviour
             if (Health < 0)
             {
                 
-                int CoinCount = Random.Range(1, 5) * RandomLevel;
+                int CoinCount = Random.Range(1, 5);
                 for (int i = 0; i < CoinCount; i++)
                 {
+                    int CoinValue = Random.Range(1, 5);
                     GameObject Coin = Instantiate(CoinPrefab, transform.position, Quaternion.identity);
+                    CoinScript CoinScriptScript = Coin.GetComponent<CoinScript>();
+                    CoinScriptScript.GetCoinValue(CoinValue);
                 }
                 Destroy(gameObject);
             }

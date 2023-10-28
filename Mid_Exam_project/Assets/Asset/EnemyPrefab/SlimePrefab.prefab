@@ -614,3 +614,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   HealthBarObject: {fileID: 6821144506174169004}
+  CoinPrefab: {fileID: 1988302061193075082, guid: 478b557b4e8a15942993bfef95be0c19, type: 3}

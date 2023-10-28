@@ -75,7 +75,7 @@ public class ShootBullet : MonoBehaviour
         {
             StartCoroutine(Hit());
         }
-        if (target.gameObject.CompareTag("Slime") || target.gameObject.CompareTag("Lizard"))
+        if (target.gameObject.CompareTag("Slime") || target.gameObject.CompareTag("Lizard") || target.gameObject.CompareTag("LizardBoss"))
         {
             StartCoroutine(Hit());
         }

@@ -312,7 +312,9 @@ public class PlayerMovement : MonoBehaviour
         }
         if (target.gameObject.CompareTag("Coin"))
         {
-
+            CoinScript coinScript = target.gameObject.GetComponent<CoinScript>();
+            coinScript.SendCoin();
+            Destroy(target.gameObject);
         }
     }
 

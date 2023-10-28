@@ -73,6 +73,10 @@ public class LizardShootBullet : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        if (target.gameObject.CompareTag("LizardBoss"))
+        {
+            Destroy(gameObject);
+        }
     }
 
 }

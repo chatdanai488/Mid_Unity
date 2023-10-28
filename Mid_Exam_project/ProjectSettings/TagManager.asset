@@ -11,6 +11,8 @@ TagManager:
   - Lizard
   - LizardBullet
   - Coin
+  - LizardBoss
+  - CoinCount
   layers:
   - Default
   - TransparentFX
