@@ -54,14 +54,14 @@ public class UpgradeUIScript : MonoBehaviour
     }
     public void ResetButton()
     {
-        HealthUpgradeButton.enabled = true;
-        AttackUpgradeButton.enabled = true;
-        AttackSpeedUpgradeButton.enabled = true;
-        BulletCountUpgradeButton.enabled = true;
-        SpeedUpgradeButton.enabled = true;
-        JumpPowerUpgradeButton.enabled = true;
+        HealthUpgradeButton.interactable = true;
+        AttackUpgradeButton.interactable = true;
+        AttackSpeedUpgradeButton.interactable = true;
+        BulletCountUpgradeButton.interactable = true;
+        SpeedUpgradeButton.interactable = true;
+        JumpPowerUpgradeButton.interactable = true;
     }
-    private void InitializeLevel()
+    public void InitializeLevel()
     {
         GameObject StatsManagerObject = GameObject.Find("StatsManager");
         StatsManager StatsManagerScript = StatsManagerObject.GetComponent<StatsManager>();
@@ -231,6 +231,7 @@ public class UpgradeUIScript : MonoBehaviour
         UpgradeScene.alpha = 0;
         Canvas UpgradScene = UpgradeScene.GetComponent<Canvas>();
         UpgradScene.sortingOrder = -1;
+        Debug.Log("Quit");
     }
 
     void Start()

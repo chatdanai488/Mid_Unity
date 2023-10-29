@@ -28,6 +28,7 @@ public class StatsManager : MonoBehaviour
     void Start()
     {
         GetCoinValue();
+        AfterUpgrade();
     }
     public void AfterUpgrade()
     {

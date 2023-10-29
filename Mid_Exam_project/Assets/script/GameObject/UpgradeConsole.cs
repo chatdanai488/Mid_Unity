@@ -13,10 +13,12 @@ public class UpgradeConsole : MonoBehaviour
     {
         UpgradeUIScript UpgradeUIScriptScript = UpgradeScene.GetComponent<UpgradeUIScript>();
         UpgradeUIScriptScript.ResetButton();
+        UpgradeUIScriptScript.InitializeLevel();
         Time.timeScale = 0;
+
         UpgradeScene.alpha = 1;
         Canvas UpgradScene = UpgradeScene.GetComponent<Canvas>();
-        UpgradScene.sortingOrder = 6;
+        UpgradScene.sortingOrder = 100;
     }
     // Start is called before the first frame update
     private void Start()

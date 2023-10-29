@@ -49,7 +49,7 @@ public class PlayerMovement : MonoBehaviour
     public void InitializeAttribute(int HealthLevel, int AttackLevel, int BulletCountLevel, int AttackSpeedLevel, int SpeedLevel, int JumpPowerLevel)
     {
         MaxHealth = 100 + HealthLevel*5;
-        Health = MaxHealth;
+        
 
         Defense = 100;
         MaxDefense = 100;
@@ -213,6 +213,8 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator Dead()
     {
+        boxCollider2d.isTrigger = true;
+        rb.bodyType = RigidbodyType2D.Static;
         audioSource.PlayOneShot(DeadSound);
         anim.SetBool("isDead", true);
         anim.SetBool("isHurt", false);
@@ -228,7 +230,7 @@ public class PlayerMovement : MonoBehaviour
 
         GunPoint = GameObject.Find("shoot-point");
         PreviousValue = false;
-        
+        Health = MaxHealth;
     }
     
     // Update is called once per frame
