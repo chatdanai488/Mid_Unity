@@ -42,6 +42,10 @@ public class SlimeScript : MonoBehaviour
     private HealthBar HealthBarScript;
 
     public GameObject CoinPrefab;
+
+
+    private AudioSource audioSource;
+    public AudioClip Slime;
     private void InitializeComponent()
     {
         SlimeRB = GetComponent<Rigidbody2D>();
@@ -173,13 +177,17 @@ public class SlimeScript : MonoBehaviour
             if (Jump < 30)
             {
                 Move();
+                audioSource.PlayOneShot(Slime);
             }
         }
         else if (!IsJump && cansee)
         {
             Move();
+            audioSource.PlayOneShot(Slime);
+
         }
         StartCoroutine(Waiting());
+
     }
     private void Move()
     {
@@ -211,6 +219,7 @@ public class SlimeScript : MonoBehaviour
                 spriteRenderer.flipX = false;
             }
         }
+        
     }
     private IEnumerator Waiting()
     {
@@ -237,6 +246,7 @@ public class SlimeScript : MonoBehaviour
         int RandomLevel = Random.Range(0, 5);
         InitializeAttribute(RandomLevel);
         StartCoroutine(FovCheck());
+        audioSource = GetComponent<AudioSource>();
         
     }
     

@@ -19,7 +19,11 @@ public class PlayerMovement : MonoBehaviour
     private BoxCollider2D boxCollider2d;
     private bool isHurt;
 
-
+    private AudioSource audioSource;
+    public AudioClip JumpSound;
+    public AudioClip ShootSound;
+    public AudioClip HurtSound;
+    public AudioClip DeadSound;
     private bool ShootCooldown;
     public GameObject HealthBarObject;
     // Plaayer Attribute
@@ -38,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         boxCollider2d = GetComponent<BoxCollider2D>();
+        audioSource = GetComponent<AudioSource>();
     }
     private void InitializeAttribute()
     {
@@ -125,6 +130,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jump);
             anim.SetBool("isJump", true);
+            audioSource.PlayOneShot(JumpSound);
         }
         if (rb.velocity.y < -0.2f)
         {
@@ -138,10 +144,13 @@ public class PlayerMovement : MonoBehaviour
             
             ShootBullet(spriteRenderer.flipX);
             BulletCount -= 1;
-            if(BulletCount < 1)
+
+            audioSource.PlayOneShot(ShootSound);
+            if (BulletCount < 1)
             {
                 ReloadBullet();
             }
+
             
         }
 
@@ -154,6 +163,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             anim.SetBool("isShoot", true);
+            
         }
         else
         {
@@ -179,6 +189,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator InvincibilityFrame()
     {
+        audioSource.PlayOneShot(HurtSound);
         isHurt = true;
         anim.SetBool("isHurt", true);
         yield return new WaitForSeconds(1);
@@ -193,6 +204,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private IEnumerator Dead()
     {
+        audioSource.PlayOneShot(DeadSound);
         anim.SetBool("isDead", true);
         anim.SetBool("isHurt", false);
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
