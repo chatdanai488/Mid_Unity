@@ -7,8 +7,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public float movex;
     private Rigidbody2D rb;
-    public float speed;
-    public float jump;
+    
     private bool isJump;
     private SpriteRenderer spriteRenderer;
     private Animator anim;
@@ -35,6 +34,9 @@ public class PlayerMovement : MonoBehaviour
     private float Attack;
     private float AttackSpeed;
     private float BulletCount;
+    private float speed;
+    private float jump;
+    private float MaxBulletCount;
     // Start is called before the first frame update
 
     private void Awake()
@@ -44,17 +46,22 @@ public class PlayerMovement : MonoBehaviour
         boxCollider2d = GetComponent<BoxCollider2D>();
         audioSource = GetComponent<AudioSource>();
     }
-    private void InitializeAttribute()
+    public void InitializeAttribute(int HealthLevel, int AttackLevel, int BulletCountLevel, int AttackSpeedLevel, int SpeedLevel, int JumpPowerLevel)
     {
-        MaxHealth = 100;
-        Health = 100;
+        MaxHealth = 100 + HealthLevel*5;
+        Health = MaxHealth;
+
         Defense = 100;
         MaxDefense = 100;
-        Attack = 7;
-        AttackSpeed = 1 / 1;
-        BulletCount = 30;
-
+        Attack = 7 + AttackLevel;
+        AttackSpeed = 1 / (1 + AttackSpeedLevel);
+        MaxBulletCount = 30 + BulletCountLevel;
+        BulletCount = MaxBulletCount;
+        speed = 5f + SpeedLevel / 20;
+        jump = 6.5f + JumpPowerLevel / 20;
         ShootCooldown = false;
+
+        Debug.Log(AttackSpeed);
     }
     private void CheckGrounded()
     {
@@ -150,7 +157,7 @@ public class PlayerMovement : MonoBehaviour
             {
                 ReloadBullet();
             }
-
+            Debug.Log(BulletCount);
             
         }
 
@@ -173,7 +180,7 @@ public class PlayerMovement : MonoBehaviour
     private void ReloadBullet()
     {
         StartCoroutine(AttackCooldown());
-        BulletCount = 30;
+        BulletCount = MaxBulletCount;
     }
     private void IsHurt(bool SlimeDirection, float SlimeContact)
     {
@@ -199,8 +206,10 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator AttackCooldown()
     {
         ShootCooldown = true;
+        Debug.Log(ShootCooldown);
         yield return new WaitForSeconds(AttackSpeed);
         ShootCooldown = false;
+        Debug.Log(ShootCooldown);
     }
     private IEnumerator Dead()
     {
@@ -219,7 +228,7 @@ public class PlayerMovement : MonoBehaviour
 
         GunPoint = GameObject.Find("shoot-point");
         PreviousValue = false;
-        InitializeAttribute();
+        
     }
     
     // Update is called once per frame

@@ -29,6 +29,10 @@ public class StatsManager : MonoBehaviour
     {
         GetCoinValue();
     }
-
+    public void AfterUpgrade()
+    {
+        CoinCount = PlayerPrefs.GetInt("CoinCount");
+        SendValue() ;
+    }
    
 }
