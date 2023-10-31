@@ -38,13 +38,18 @@ public class PlayerMovement : MonoBehaviour
     private float jump;
     private float MaxBulletCount;
     // Start is called before the first frame update
+    public Canvas DeadScreen;
 
+    private bool IsHurtMove;
+    private bool IsInputAllowed;
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         anim = GetComponent<Animator>();
         boxCollider2d = GetComponent<BoxCollider2D>();
         audioSource = GetComponent<AudioSource>();
+        Time.timeScale = 1;
+        IsInputAllowed = true;
     }
     public void InitializeAttribute(int HealthLevel, int AttackLevel, int BulletCountLevel, int AttackSpeedLevel, int SpeedLevel, int JumpPowerLevel)
     {
@@ -88,20 +93,24 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Move()
     {
-        movex = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(movex * speed, rb.velocity.y);
-
-        if (movex > 0.01f)
+        if(!IsHurtMove)
         {
-            spriteRenderer.flipX = false;
-            //transform.Rotate(0f,180f,0f);
-        }
-        else if (movex < -0.01f)
-        {
-            spriteRenderer.flipX = true;
-            //transform.Rotate(0f, 360f, 0f);
+            movex = Input.GetAxis("Horizontal");
+            rb.velocity = new Vector2(movex * speed, rb.velocity.y);
 
+            if (movex > 0.01f)
+            {
+                spriteRenderer.flipX = false;
+                //transform.Rotate(0f,180f,0f);
+            }
+            else if (movex < -0.01f)
+            {
+                spriteRenderer.flipX = true;
+                //transform.Rotate(0f, 360f, 0f);
+
+            }
         }
+       
     }
     private void Duck()
     {
@@ -182,17 +191,19 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(AttackCooldown());
         BulletCount = MaxBulletCount;
     }
-    private void IsHurt(bool SlimeDirection, float SlimeContact)
+    private IEnumerator IsHurt(bool SlimeDirection, float SlimeContact)
     {
-        if (SlimeDirection)
+        IsHurtMove = true;
+        if (!SlimeDirection)
         {
-            rb.velocity = new Vector2(-1, jump/2);
+            rb.velocity = new Vector2(-5, jump);
         }
         else
         {
-            rb.velocity = new Vector2(1, jump/2) ;
+            rb.velocity = new Vector2(5, jump) ;
         }
-        
+        yield return new WaitForSeconds(0.1f);
+        IsHurtMove = false;
     }
     private IEnumerator InvincibilityFrame()
     {
@@ -220,11 +231,20 @@ public class PlayerMovement : MonoBehaviour
         anim.SetBool("isHurt", false);
         rb.constraints = RigidbodyConstraints2D.FreezeAll;
         yield return new WaitForSeconds(2);
-        
+
+        CanvasGroup DeadScreenCanvasGroup = DeadScreen.GetComponent<CanvasGroup>();
+        DeadScreenCanvasGroup.alpha = 1f;
+        DeadScreen.sortingOrder = 100;
+        Time.timeScale = 0;
+        IsInputAllowed = false;
+
         Destroy(gameObject);
+
+        
     }
     void Start()
     {
+        IsHurtMove = false;
         isJump = false;
         rb = GetComponent<Rigidbody2D>();
 
@@ -236,18 +256,22 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CheckGrounded();
-        Move();
-        Shoot(); //Shoot-idle
-        Run();//Run
-        Jump();//Jump
-        Duck(); //Duck
-
-
-        if (Input.GetKeyDown(KeyCode.R))
+        if (IsInputAllowed)
         {
-            ReloadBullet();
+            CheckGrounded();
+            Move();
+            Shoot(); //Shoot-idle
+            Run();//Run
+            Jump();//Jump
+            Duck(); //Duck
+
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                ReloadBullet();
+            }
         }
+        
     }
 
     private void ShootBullet(bool value)
@@ -289,7 +313,7 @@ public class PlayerMovement : MonoBehaviour
                 HealthBarScript.SetBar(Health, MaxHealth);
 
                 
-                IsHurt(SlimeDirection, SlimeContact);
+                StartCoroutine(IsHurt(SlimeDirection, SlimeContact));
                 StartCoroutine(InvincibilityFrame());
                 if (Health < 0)
                 {
@@ -314,8 +338,8 @@ public class PlayerMovement : MonoBehaviour
                 HealthBar HealthBarScript = HealthBarObject.GetComponent<HealthBar>();
                 HealthBarScript.SetBar(Health, MaxHealth);
 
-                
-                IsHurt(SlimeDirection, SlimeContact);
+
+                StartCoroutine(IsHurt(SlimeDirection, SlimeContact));
                 StartCoroutine(InvincibilityFrame());
                 if (Health < 0)
                 {
@@ -341,7 +365,7 @@ public class PlayerMovement : MonoBehaviour
                 HealthBarScript.SetBar(Health, MaxHealth);
 
                 
-                IsHurt(SlimeDirection, SlimeContact);
+                StartCoroutine(IsHurt(SlimeDirection, SlimeContact));
                 StartCoroutine(InvincibilityFrame());
                 if (Health < 0)
                 {

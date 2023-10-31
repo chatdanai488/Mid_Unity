@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class UpgradeConsole : MonoBehaviour
 {
-    public CanvasGroup UpgradeScene;
+    private GameObject UpgradeScreenObject;
+    private CanvasGroup UpgradeScene;
     private Collider2D collider2D;
     private ContactFilter2D contactFilter;
     private List<Collider2D> colliders = new List<Collider2D>(1);
@@ -23,6 +24,8 @@ public class UpgradeConsole : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        UpgradeScreenObject = GameObject.Find("UpgradeScreen");
+        UpgradeScene = UpgradeScreenObject.GetComponent<CanvasGroup>();
         collider2D = GetComponent<Collider2D>();
     }
     private void Update()

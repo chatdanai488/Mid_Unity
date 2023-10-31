@@ -67,7 +67,7 @@ public class LizardBossScript : MonoBehaviour
 
         MaxHealth = 500 + (40 * level);
         MaxDefense = 3 + (1 * level);
-        Attack = 10 + (float)(0.5 * level);
+        Attack = 20 + (float)(0.5 * level);
         Health = MaxHealth;
         Defense = MaxDefense;
         Speed = 1f;

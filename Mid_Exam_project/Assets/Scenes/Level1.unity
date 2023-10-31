@@ -30830,6 +30830,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 39c0c9243e031a4448181984bd9e2a5f, type: 3}
+--- !u!223 &1031343152 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 9159141041032305709, guid: 39c0c9243e031a4448181984bd9e2a5f, type: 3}
+  m_PrefabInstance: {fileID: 1031343151}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1098170998 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8991896386392564981, guid: b733df90dc5b67b4797fcd09bfb7d2c4, type: 3}
@@ -31635,6 +31640,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7395591388240824133, guid: 06b7d4c41cc3eb84e889df9d7418a8fd, type: 3}
+      propertyPath: DeadScreen
+      value: 
+      objectReference: {fileID: 1031343152}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
