@@ -242,12 +242,12 @@ public class LizardBossScript : MonoBehaviour
         if (value == true)
         {
 
-            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x + 20f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
+            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x + 10f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
         }
         else if (value == false)
         {
 
-            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x - 20f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
+            LizardGunPoint.transform.position = new Vector3(LizardGunPoint.transform.position.x - 10f, LizardGunPoint.transform.position.y, LizardGunPoint.transform.position.z);
         }
     }
 

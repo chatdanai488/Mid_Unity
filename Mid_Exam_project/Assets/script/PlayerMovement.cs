@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -42,6 +43,9 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsHurtMove;
     private bool IsInputAllowed;
+
+    public Canvas Minimap;
+    [SerializeField] public Button CloseMinimapButton;
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -50,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         Time.timeScale = 1;
         IsInputAllowed = true;
+        Minimap.sortingOrder = -1;
     }
     public void InitializeAttribute(int HealthLevel, int AttackLevel, int BulletCountLevel, int AttackSpeedLevel, int SpeedLevel, int JumpPowerLevel)
     {
@@ -191,6 +196,22 @@ public class PlayerMovement : MonoBehaviour
         StartCoroutine(AttackCooldown());
         BulletCount = MaxBulletCount;
     }
+
+    private void OpenMinimap()
+    {
+        if (Input.GetKey(KeyCode.P))
+        {
+            Minimap.sortingOrder = 100;
+            Time.timeScale = 0;
+            IsInputAllowed = false;
+        }
+    }
+    private void CloseMinimap()
+    {
+        Minimap.sortingOrder = -1;
+        Time.timeScale = 1;
+        IsInputAllowed = true;
+    }
     private IEnumerator IsHurt(bool SlimeDirection, float SlimeContact)
     {
         IsHurtMove = true;
@@ -264,14 +285,14 @@ public class PlayerMovement : MonoBehaviour
             Run();//Run
             Jump();//Jump
             Duck(); //Duck
-
+            OpenMinimap();
 
             if (Input.GetKeyDown(KeyCode.R))
             {
                 ReloadBullet();
             }
         }
-        
+        CloseMinimapButton.onClick.AddListener(CloseMinimap);
     }
 
     private void ShootBullet(bool value)

@@ -7,7 +7,7 @@ public class UpgradeConsole : MonoBehaviour
     private GameObject UpgradeScreenObject;
     private CanvasGroup UpgradeScene;
     private Collider2D collider2D;
-    private ContactFilter2D contactFilter;
+    public ContactFilter2D contactFilter;
     private List<Collider2D> colliders = new List<Collider2D>(1);
     public CanvasGroup E;
     private void CallUpgradeScreen()
@@ -27,19 +27,35 @@ public class UpgradeConsole : MonoBehaviour
         UpgradeScreenObject = GameObject.Find("UpgradeScreen");
         UpgradeScene = UpgradeScreenObject.GetComponent<CanvasGroup>();
         collider2D = GetComponent<Collider2D>();
-    }
-    private void Update()
-    {
+
         collider2D.OverlapCollider(contactFilter, colliders);
-        foreach(var o in colliders)
+
+
+        if (collider2D.OverlapCollider(contactFilter, colliders) == 0)
+        {
+            E.alpha = 0;
+            if (Input.GetKeyDown(KeyCode.E)) { }
+        }
+        else
         {
             E.alpha = 1;
             GetkeyUpgrade();
         }
+    }
+    private void Update()
+    {
+        collider2D.OverlapCollider(contactFilter, colliders);
+        
         
         if(collider2D.OverlapCollider(contactFilter, colliders) == 0)
         {
             E.alpha = 0;
+            if (Input.GetKeyDown(KeyCode.E)) {  }
+        }
+        else
+        {
+            E.alpha = 1;
+            GetkeyUpgrade();
         }
     }
     private void GetkeyUpgrade()
