@@ -123,7 +123,7 @@ public class LizardBossScript : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
-        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, FieldOfView);
+        
 
         if (cansee)
         {

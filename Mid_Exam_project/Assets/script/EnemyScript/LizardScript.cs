@@ -144,9 +144,9 @@ public class LizardScript : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.white;
-        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, FieldOfView);
+        
         Gizmos.color = Color.blue;
-        UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, PlayerDetect);
+        
 
         if (cansee)
         {

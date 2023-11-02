@@ -18,12 +18,16 @@ public class ScenesManager : MonoBehaviour
     {
         MainMenu,
         LevelSelect,
+        TutorialScreen,
         Level1,
-        Level2
+        Level2,
+        LevelEnd
     }
     public void LoadNewGame()
     {
-        SceneManager.LoadScene(Scene.Level1.ToString());
+        int value = 1;
+        PlayerPrefs.SetInt("SelectedLevel", value);
+        SceneManager.LoadScene(Scene.TutorialScreen.ToString());
     }
     public void LoadLevelSelection()
     {
@@ -31,7 +35,13 @@ public class ScenesManager : MonoBehaviour
     }
     public void LevelSelect(int level)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + level);
+        PlayerPrefs.SetInt("SelectedLevel", level);
+        SceneManager.LoadScene(Scene.TutorialScreen.ToString());
+    }
+    public void TutorialSceneLoad()
+    {
+        int Level = PlayerPrefs.GetInt("SelectedLevel");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + Level);
     }
     public void LoadScene(Scene scene)
     {

@@ -256,6 +256,7 @@ public class PlayerMovement : MonoBehaviour
         CanvasGroup DeadScreenCanvasGroup = DeadScreen.GetComponent<CanvasGroup>();
         DeadScreenCanvasGroup.alpha = 1f;
         DeadScreen.sortingOrder = 100;
+        DeadScreenCanvasGroup.interactable = true;
         Time.timeScale = 0;
         IsInputAllowed = false;
 

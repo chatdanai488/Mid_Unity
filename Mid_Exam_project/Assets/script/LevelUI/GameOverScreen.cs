@@ -19,7 +19,7 @@ public class GameOverScreen : MonoBehaviour
         DeadScreenCanvas.sortingOrder = -1;
         DeadScreen = GetComponent<CanvasGroup>();
         DeadScreen.alpha = 0;
-
+        DeadScreen.interactable = false;
         ScenesManagerObject = GameObject.Find("ScenesManager");
         ScenesManagerScript = ScenesManagerObject.GetComponent<ScenesManager>();
     }

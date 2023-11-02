@@ -12,14 +12,15 @@ public class MainMenu : MonoBehaviour
     private void StartNewGame()
     {
         ScenesManager ScenesManagerScript = ScenesManagerObject.GetComponent<ScenesManager>();
-        ScenesManagerScript.LoadNewGame();
+        ScenesManagerScript.LevelSelect(1);
     }
     private void LevelSelect()
     {
         ScenesManager ScenesManagerScript = ScenesManagerObject.GetComponent<ScenesManager>();
         ScenesManagerScript.LoadLevelSelection();
+
     }
-    void Update()
+    void Start()
     {
         NewGameButton.onClick.AddListener(StartNewGame);
         LevelSelectionButton.onClick.AddListener(LevelSelect);

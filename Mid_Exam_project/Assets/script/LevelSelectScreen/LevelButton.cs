@@ -15,7 +15,7 @@ public class LevelButton : MonoBehaviour
         ScenesManager ScenesManagerScript = ScenesManagerObject.GetComponent<ScenesManager>();
         ScenesManagerScript.LevelSelect(Int32.Parse(LevelSelect.text));
     }
-    void Update()
+    void Start()
     {
         LevelButtonObject.onClick.AddListener(LoadLevel);
     }
